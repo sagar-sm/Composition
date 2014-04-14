@@ -102,10 +102,9 @@ void draw(){
   if(fft.getBand(28)>9 || fft.getBand(34)>9 || fft.getBand(35)>9 ){
     stroke(random(255),random(255),random(255));
     line(random(width),0,random(width),height);
-    
+    flock.release(new Boid(width, random(height)));
   }
   
-  flock.release(new Boid(width, random(height)));
   flock.run();
 }
 
