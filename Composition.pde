@@ -30,10 +30,15 @@ ArrayList<PVector> mat;
 PVector loc, speed;
 float angularV = 0;
 
+Flock flock;
+float ground, amplitude = 10, scale = 0.1;
+int max = 2;
+
 void setup(){
   size(displayWidth, displayHeight, P3D);
   background(255);
   minim = new Minim(this);
+  flock = new Flock();
   song = minim.loadFile("song.mp3", 512);
   song.play();
   
@@ -45,6 +50,7 @@ void setup(){
   for(int i = 0; i < 4; i++)
     mat.add(new PVector(0,0,35));
   blur = loadShader("blur.glsl");
+  ground = height-(amplitude*max*2*scale);
 }
 
 float change = 0;
@@ -58,9 +64,11 @@ void draw(){
   fill(242,0,52);
   ellipse(frameCount%width, height/2+(70*sin(tan(frameCount*_CALIBRATION))), 4, 4);
   float r = random(20);
+  
   if(fft.getBand(2)>14){
     fill(0,117,242);
     ellipse(random(width), random(height),r,r);
+    //flock.release(new Boid(width, random(height)));
   }
   if(fft.getBand(7)>10 && frameCount > 1000){
     fill(255,251,8);
@@ -96,6 +104,9 @@ void draw(){
     line(random(width),0,random(width),height);
     
   }
+  
+  flock.release(new Boid(width, random(height)));
+  flock.run();
 }
 
 boolean sketchFullScreen(){
